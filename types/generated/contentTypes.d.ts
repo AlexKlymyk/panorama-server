@@ -417,6 +417,48 @@ export interface ApiMenuItemMenuItem extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiMenuMenu extends Struct.CollectionTypeSchema {
+  collectionName: 'menus';
+  info: {
+    description: '';
+    displayName: 'Menu';
+    pluralName: 'menus';
+    singularName: 'menu';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    category: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    isDrinks: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::menu.menu'>;
+    menu_items: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::menu-item.menu-item'
+    >;
+    order: Schema.Attribute.Decimal;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -927,6 +969,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::menu-item.menu-item': ApiMenuItemMenuItem;
+      'api::menu.menu': ApiMenuMenu;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
